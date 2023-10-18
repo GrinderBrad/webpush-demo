@@ -44,19 +44,20 @@ app.post("/subscribe", (req, res) => {
   res.status(201).json({});
 });
 
-app.get("/stream-token/:id", (req, res) => {
+app.get("/stream-token", (req, res) => {
   const api_key = 'e4g9mt75dakw'
   const api_secret = 'rfh937b5awgy3c2ue2tvubrj7zqhyjx6fcpz3tk8nb9bff7kzuv9t3ay4q2c7uks'
   // const user_id = 'john'
-  let userId = req.params.id;
+  let firstName = req.params.firstName;
+  let lastName = req.params.lastName;
   // Initialize a Server Client
   // const serverClient = StreamChat.getInstance(process.env.STREAM_API_KEY, process.env.STREAM_API_SECRET);
   const client = stream.connect(api_key, api_secret, '1268153', {location: 'us-east'});
   
   // const serverClient = StreamChat.getInstance(api_key, api_secret);
   // Create User Token
-  const token = client.createUserToken(userId, {});
-  console.log(userId, token)
+  const token = client.createUserToken(`${firstName}${lastName}`, {});
+  console.log(`${firstName} ${lastName}`, token)
   res.status(200).json({token: token});
 });
 
