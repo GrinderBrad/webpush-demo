@@ -2,6 +2,9 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const webPush = require("web-push");
 const path = require('path');
+const cors = require('cors')
+const stream = require('getstream');
+
 
 const app = express();
 const port = 3000;
@@ -9,6 +12,8 @@ const port = 3000;
 app.use(bodyParser.json());
 
 app.use(express.static(path.join(__dirname, 'public')));
+
+app.use(cors())
 
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
@@ -37,6 +42,22 @@ app.post("/subscribe", (req, res) => {
   }
   console.log({subscriptions})
   res.status(201).json({});
+});
+
+app.get("/stream-token/:id", (req, res) => {
+  const api_key = 'e4g9mt75dakw'
+  const api_secret = 'rfh937b5awgy3c2ue2tvubrj7zqhyjx6fcpz3tk8nb9bff7kzuv9t3ay4q2c7uks'
+  // const user_id = 'john'
+  let userId = req.params.id;
+  // Initialize a Server Client
+  // const serverClient = StreamChat.getInstance(process.env.STREAM_API_KEY, process.env.STREAM_API_SECRET);
+  const client = stream.connect(api_key, api_secret, '1268153', {location: 'us-east'});
+  
+  // const serverClient = StreamChat.getInstance(api_key, api_secret);
+  // Create User Token
+  const token = client.createUserToken(userId, {});
+  console.log(userId, token)
+  res.status(200).json({token: token});
 });
 
 app.get('/send-notification', async (req, res) => {

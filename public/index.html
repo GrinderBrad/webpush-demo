@@ -5,6 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <title></title>
     <meta name="description" content="" />
+    <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="manifest" href="/manifest.json">
     <meta name="theme-color" content="#000000">
@@ -30,17 +31,17 @@
       window.addEventListener("load", function () {
         console.log('sfsdf')
         navigator.serviceWorker
-          .register("/file/sw.js")
+          .register("/sw.js")
           .then((registration) => {
-            globalRegistration = registration
-            document.getElementById('logger').textContent += `ServiceWorker registration successful ${globalRegistration} \n\n`;
+            // globalRegistration = registration
+            // document.getElementById('logger').textContent += `ServiceWorker registration successful ${globalRegistration} \n\n`;
             console.log(
               "ServiceWorker registration successful with scope: ",
               registration.scope
             );
           })
           .catch((err) => {
-            document.getElementById('error').textContent += err;
+            // document.getElementById('error').textContent += err;
             console.log("ServiceWorker registration failed: ", err)
           });
       });
@@ -98,11 +99,28 @@
           console.log(err)
       });
     }
+    async function isPWA() {
+    if ('getInstalledRelatedApps' in navigator) {
+        const relatedApps = await navigator.getInstalledRelatedApps();
+        if (relatedApps.length > 0) {
+            return true;
+        }
+    }
+    return false;
+}
 
     document.querySelector('#notification-subscribe').addEventListener('click', function() {
-      console.log(document.getElementById('logger').textContent += 'asdsa')
+      isPWA().then(result => {
+    if (result) {
+      document.getElementById('logger').textContent += 'DA'
+    } else {
+      document.getElementById('logger').textContent += 'NEN'
+    }
+});
+      // console.log(document.getElementById('logger').textContent += 'display-mode: standalone  ' + window.matchMedia('(display-mode: standalone)').matches)
+      // console.log(document.getElementById('logger').textContent += '\n\nnavigator.standalone  ' + window.navigator.standalone)
       // document.getElementById('logger')?.textContent += 'log';
-      subscribeUser();
+      // subscribeUser();
     });
 
 
