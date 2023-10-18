@@ -1,0 +1,7 @@
+version: '3.5'
+services:
+  activity-feed:
+    restart: always
+    image: activity-feed
+    ports:
+      - '3020:3020'
