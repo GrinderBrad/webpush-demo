@@ -48,8 +48,8 @@ app.get("/stream-token", (req, res) => {
   const api_key = 'e4g9mt75dakw'
   const api_secret = 'rfh937b5awgy3c2ue2tvubrj7zqhyjx6fcpz3tk8nb9bff7kzuv9t3ay4q2c7uks'
   // const user_id = 'john'
-  let firstName = req.params.firstName;
-  let lastName = req.params.lastName;
+  let firstName = req.query.firstName;
+  let lastName = req.query.lastName;
   // Initialize a Server Client
   // const serverClient = StreamChat.getInstance(process.env.STREAM_API_KEY, process.env.STREAM_API_SECRET);
   const client = stream.connect(api_key, api_secret, '1268153', {location: 'us-east'});
