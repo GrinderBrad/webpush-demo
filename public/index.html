@@ -29,11 +29,10 @@
     var globalRegistration;
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", function () {
-        console.log('sfsdf')
         navigator.serviceWorker
           .register("/sw.js")
           .then((registration) => {
-            // globalRegistration = registration
+            globalRegistration = registration
             // document.getElementById('logger').textContent += `ServiceWorker registration successful ${globalRegistration} \n\n`;
             console.log(
               "ServiceWorker registration successful with scope: ",
@@ -63,7 +62,7 @@
       document.getElementById('logger').textContent += 'subscribeUser() \n\n';
       navigator.serviceWorker.ready.then((registration) => {
         Notification.requestPermission().then(() => {
-          document.getElementById('logger').textContent += `Notification.requestPermission().then ${globalRegistration.pushManager.subscribe} \n\n`;
+        document.getElementById('logger').textContent += `Notification.requestPermission().then ${globalRegistration.pushManager.subscribe} \n\n`;
           globalRegistration.pushManager
           .subscribe({
             userVisibleOnly: true,
@@ -110,13 +109,7 @@
 }
 
     document.querySelector('#notification-subscribe').addEventListener('click', function() {
-      isPWA().then(result => {
-    if (result) {
-      document.getElementById('logger').textContent += 'DA'
-    } else {
-      document.getElementById('logger').textContent += 'NEN'
-    }
-});
+      subscribeUser();
       // console.log(document.getElementById('logger').textContent += 'display-mode: standalone  ' + window.matchMedia('(display-mode: standalone)').matches)
       // console.log(document.getElementById('logger').textContent += '\n\nnavigator.standalone  ' + window.navigator.standalone)
       // document.getElementById('logger')?.textContent += 'log';

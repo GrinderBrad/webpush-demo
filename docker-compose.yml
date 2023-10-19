@@ -3,5 +3,7 @@ services:
   activity-feed:
     restart: always
     image: activity-feed
+    volumes:
+      - ./database.sqlite:/database.sqlite
     ports:
       - '3020:3020'
