@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title></title>
+    <meta name="description" content="" />
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#000000">
+    <link rel="stylesheet" href="" />
+    
+  </head>
+  <body>
+    Demo push notification asdasd
+
+    <a href="/file">to file</a>
+
+    error:<div id="error"></div> <br> <br>
+    log:<div id="logger"></div> <br><br>
+
+    <button id="notification-subscribe">Subscribe</button>
+
+  </body>
+  <script async defer>
+    const applicationServerPublicKey =
+      "BNu91O7BEuaA36R2ThADGftkc9vpq0Z3UmAX55UhdHZSCE-3m7Z9HWktYJsDEFGoWANrW3vyLzbjFE-krvVbjYo";
+    var globalRegistration;
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", function () {
+        navigator.serviceWorker
+          .register("/sw.js")
+          .then((registration) => {
+            globalRegistration = registration
+            // document.getElementById('logger').textContent += `ServiceWorker registration successful ${globalRegistration} \n\n`;
+            console.log(
+              "ServiceWorker registration successful with scope: ",
+              registration.scope
+            );
+          })
+          .catch((err) => {
+            // document.getElementById('error').textContent += err;
+            console.log("ServiceWorker registration failed: ", err)
+          });
+      });
+    }
+    function urlBase64ToUint8Array(base64String) {
+      const padding = "=".repeat((4 - (base64String.length % 4)) % 4);
+      const base64 = (base64String + padding)
+        .replace(/-/g, "+")
+        .replace(/_/g, "/");
+      const rawData = window.atob(base64);
+      const outputArray = new Uint8Array(rawData.length);
+      for (let i = 0; i < rawData.length; ++i) {
+        outputArray[i] = rawData.charCodeAt(i);
+      }
+      return outputArray;
+    }
+    window.addEventListener('DOMContentLoaded', () => {
+      console.log(document.getElementById('logger').textContent += 'display-mode: standalone ' + window.matchMedia('(display-mode: standalone)').matches)
+    })
+
+    const subscribeUser = () => {
+      document.getElementById('logger').textContent += 'subscribeUser() \n\n';
+      navigator.serviceWorker.ready.then((registration) => {
+        Notification.requestPermission().then(() => {
+        document.getElementById('logger').textContent += `Notification.requestPermission().then ${globalRegistration.pushManager.subscribe} \n\n`;
+          globalRegistration.pushManager
+          .subscribe({
+            userVisibleOnly: true,
+            applicationServerKey: urlBase64ToUint8Array(
+              applicationServerPublicKey
+            ),
+          })
+          .then((subscription) => {
+            document.getElementById('logger').textContent += 'SUCCESS';
+            sendSubscriptionToServer(subscription);
+          })
+          .catch((error) => {
+            document.getElementById('logger').textContent += 'Notification.requestPermission().catch \n\n';
+            document.getElementById('error').textContent += 'error';
+            // document.getElementById('error')?.textContent = error;
+            console.error("Failed to subscribe the user: ", error);
+          });
+        }).catch((err) => {
+
+        })
+        
+      });
+    }
+
+    function sendSubscriptionToServer(subscription) {
+      fetch("/subscribe", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(subscription),
+      }).catch((err) => {
+          console.log(err)
+      });
+    }
+    async function isPWA() {
+    if ('getInstalledRelatedApps' in navigator) {
+        const relatedApps = await navigator.getInstalledRelatedApps();
+        if (relatedApps.length > 0) {
+            return true;
+        }
+    }
+    return false;
+}
+
+    document.querySelector('#notification-subscribe').addEventListener('click', function() {
+      subscribeUser();
+      console.log(document.getElementById('logger').textContent += 'display-mode: standalone  ' + window.matchMedia('(display-mode: standalone)').matches)
+      // console.log(document.getElementById('logger').textContent += '\n\nnavigator.standalone  ' + window.navigator.standalone)
+      // document.getElementById('logger')?.textContent += 'log';
+      // subscribeUser();
+    });
+
+
+    // new
+
+
+  // AFTER SW come from backend
+  // if ('serviceWorker' in navigator && 'PushManager' in window) {
+  //   navigator.serviceWorker.ready.then(() => {
+  //     if (Notification.permission !== 'granted' && Notification.permission !== 'denied') {
+  //       executeModalWindowPWA()
+  //     }
+  //   });
+  // }
+  // function executeModalWindowNotifications() {
+  //   var hiddenLink = $('<a>').attr('id', 'hiddenLink').attr('href', '/bbcontest/notification').addClass('open-as-modal');
+  //   $('body').append(hiddenLink);
+  //   hiddenLink.get(0).click();
+  // }
+  // if ('serviceWorker' in navigator && 'PushManager' in window) {
+  //   if ((window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true) && (Notification.permission !== 'granted' && Notification.permission !== 'denied')) {
+  //     executeModalWindowNotifications()
+  //   }
+  // }
+
+  // function executeModalWindowPWA() {
+  //   var hiddenLink = $('<a>').attr('id', 'hiddenLink').attr('href', '/bbcontest/pwainstall').addClass('open-as-modal');
+  //   $('body').append(hiddenLink);
+  //   hiddenLink.get(0).click();
+  // }
+  // if (!window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone !== true) {
+  //   executeModalWindowPWA()
+  // }
+
+
+  // // with SW
+  // function executeModalWindowPWA() {
+  //   var hiddenLink = $('<a>').attr('id', 'hiddenLink').attr('href', '/bbcontest/notification').addClass('open-as-modal');
+  //   $('body').append(hiddenLink);
+  //   hiddenLink.get(0).click();
+  //   console.log('executeModalWindowPWA worked')
+  // }
+
+    // if ("serviceWorker" in navigator && window.PushManager) {
+    //   subscribeUser();
+    // }
+  </script>
+</html>

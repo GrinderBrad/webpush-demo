@@ -56,22 +56,11 @@ app.post("/subscribe", async (req, res) => {
   res.status(201).json({newSubscription});
 });
 
-app.get("/stream-token", async (req, res) => {
-  const api_key = "e4g9mt75dakw";
-  const api_secret =
-    "rfh937b5awgy3c2ue2tvubrj7zqhyjx6fcpz3tk8nb9bff7kzuv9t3ay4q2c7uks";
-  // const user_id = 'john'
+app.get("/weavy-token", async (req, res) => {
   let firstName = req.query.firstName;
   let lastName = req.query.lastName;
-  // Initialize a Server Client
-  // const serverClient = StreamChat.getInstance(process.env.STREAM_API_KEY, process.env.STREAM_API_SECRET);
-  const client = stream.connect(api_key, api_secret, "1268153", {
-    location: "us-east",
-  });
-  const user1Feed = client.feed('flat', `AlexBuzlov`);
-  user1Feed.follow('flat', 'AlexBuzlov1');
-  let userToken = await client.createUserToken(`${firstName}${lastName}`);
-  res.status(200).json({ token: userToken });
+
+  res.status(200).json({token: 'wyu_ZpE3a2s1y2ek8v6SrhmTNqkJ0CVFmN1SNTiR' });
 });
 
 app.get('/list-all-subscriptions', async (req, res) => {
