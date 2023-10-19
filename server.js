@@ -44,6 +44,7 @@ webPush.setVapidDetails(
 
 app.post("/subscribe", async (req, res) => {
   const {subscription, registrantId} = req.body;
+  console.log({subscription, registrantId})
   const foundSubscription = await Subscriptions.findOne({registrantId})
   if (foundSubscription) {
     foundSubscription.subscription = subscription
