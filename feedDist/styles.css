@@ -1,0 +1,35 @@
+@font-face {
+  font-family: 'BLKBSans';
+  font-weight: 400;
+  font-style: normal;
+  src: url('https://assets.swoogo.com/custom-font/2550.woff') format('woff');
+}
+
+body {
+  font-family: 'BLKBSans', sans-serif !important;
+}
+
+.wy-post-editor-inputs button:nth-child(3) {
+  display: none;
+}
+
+.wy-post-editor-inputs .wy-button-primary {
+  background-color: #7a04dd;
+  border-radius: 8px;
+}
+
+.wy-icon-primary * {
+  fill: #7a04dd;
+}
+
+.wy-dropdown-item .wy-icon * {
+  fill: #7a04dd !important;
+}
+
+.wy-post {
+  background-color: #f0f4f9 !important;
+}
+
+.wy-comment {
+  background-color: #e0ebf2 !important;
+}

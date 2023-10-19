@@ -7,15 +7,16 @@
     <meta name="description" content="" />
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="stylesheet" href="" />
+    <link rel="stylesheet" href="styles.css" />
     <script src="https://cdn.jsdelivr.net/npm/@weavy/dropin-js@18.0.1/dist/weavy.js" crossorigin="anonymous"></script>
 <script>
   // url to your Weavy environment
   Weavy.url = "https://7105b529b57741a79e09c5836f713b38.weavy.io";
   // token factory that returns the access_token for your demo user
+  // Weavy.tokenFactory = async () => 'wyu_rxhxmLzKp0N6j9SAWODT4ppxWFJXhX0RQRIF'
   setTimeout(() => {
     const urlParams = new URLSearchParams(window.location.search);
-    fetch(`http://localhost:3020/weavy-token?firstName=${urlParams.get('firstName')}&lastName=${urlParams.get('lastName')}`).then((res) => res.json()).then((data) => {
+    fetch(`https://ivjqqpdn62.execute-api.us-east-1.amazonaws.com/weavy-token?firstName=${urlParams.get('firstName')}&lastName=${urlParams.get('lastName')}`).then((res) => res.json()).then((data) => {
       Weavy.tokenFactory = async () => data.token
     }).catch((err) => console.error(err))    
   }, 500)

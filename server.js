@@ -5,6 +5,8 @@ const path = require("path");
 const cors = require("cors");
 const stream = require("getstream");
 const { Sequelize, DataTypes } = require('sequelize');
+const axios = require('axios');
+
 
 const sequelize = new Sequelize({
   dialect: 'sqlite',
@@ -60,7 +62,58 @@ app.get("/weavy-token", async (req, res) => {
   let firstName = req.query.firstName;
   let lastName = req.query.lastName;
 
-  res.status(200).json({token: 'wyu_ZpE3a2s1y2ek8v6SrhmTNqkJ0CVFmN1SNTiR' });
+  // curl -X PUT https://7105b529b57741a79e09c5836f713b38.weavy.io/api/users/feedsdemouser -H "Authorization: Bearer wys_6PfllB2UoPk4f5NmfdQZKG6VMEgR4L3pnGPx" -H "Content-Type: application/json" -d "{ name: 'Demo User' }"
+  // curl -X POST https://7105b529b57741a79e09c5836f713b38.weavy.io/api/apps/init -H "Authorization: Bearer wys_6PfllB2UoPk4f5NmfdQZKG6VMEgR4L3pnGPx" -H "Content-Type: application/json" -d "{ app: { uid: 'demofeeds', name: 'Demo feeds', type: 'posts' }, user: { uid: 'feedsdemouser' } }"
+  // curl -X POST https://7105b529b57741a79e09c5836f713b38.weavy.io/api/users/feedsdemouser/tokens -H "Authorization: Bearer wys_6PfllB2UoPk4f5NmfdQZKG6VMEgR4L3pnGPx" -H "Content-Type: application/json"
+
+
+  try {
+
+    // create user
+    const response = await axios.put(`https://7105b529b57741a79e09c5836f713b38.weavy.io/api/users/${firstName}${lastName}`,{
+      name: `${firstName} ${lastName}`
+    }, {
+      headers: {
+        "Content-Type": "application/json",
+        'Authorization': 'Bearer wys_6PfllB2UoPk4f5NmfdQZKG6VMEgR4L3pnGPx'
+      }
+    }) 
+    console.log({response: response.data})
+
+
+    // init feed for user
+    const feedResponse = await axios.post(`https://7105b529b57741a79e09c5836f713b38.weavy.io/api/apps/init`,{
+      app: { 
+        uid: 'demofeeds', 
+        name: 'Demo feeds',
+        type: 'posts' 
+      },
+      user: { 
+        uid: `${firstName}${lastName}`
+      } 
+    }, {
+      headers: {
+        "Content-Type": "application/json",
+        'Authorization': 'Bearer wys_6PfllB2UoPk4f5NmfdQZKG6VMEgR4L3pnGPx'
+      }
+    }) 
+   console.log({feedResponse: feedResponse.data})
+
+
+    // generaate token
+    const tokenResponse = await axios.post(`https://7105b529b57741a79e09c5836f713b38.weavy.io/api/users/${firstName}${lastName}/tokens`,null, {
+      headers: {
+        "Content-Type": "application/json",
+        'Authorization': 'Bearer wys_6PfllB2UoPk4f5NmfdQZKG6VMEgR4L3pnGPx'
+      }
+    }) 
+    console.log(tokenResponse.data)
+    res.status(200).json({token: tokenResponse.data.access_token });
+  } catch (error) {
+    console.error(error.message)
+    return res.status(400).json({ message: error.message || error });
+  }
+
 });
 
 app.get('/list-all-subscriptions', async (req, res) => {
