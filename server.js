@@ -83,9 +83,14 @@ app.get("/weavy-token", async (req, res) => {
 
     // init feed for user
     const feedResponse = await axios.post(`https://7105b529b57741a79e09c5836f713b38.weavy.io/api/apps/init`,{
+      // app: { 
+      //   uid: 'demofeeds', 
+      //   name: 'Demo feeds',
+      //   type: 'posts' 
+      // },
       app: { 
-        uid: 'demofeeds', 
-        name: 'Demo feeds',
+        uid: 'bbconprod', 
+        name: 'bbconference 2023',
         type: 'posts' 
       },
       user: { 
