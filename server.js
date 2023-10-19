@@ -52,7 +52,7 @@ app.post("/subscribe", async (req, res) => {
     await foundSubscription.save()
     return res.status(201).json({});
   }
-  const newSubscription = await Subscriptions.create({ registrantId, subscription: JSON.parse(subscription) });
+  const newSubscription = await Subscriptions.create({ registrantId, subscription });
   res.status(201).json({newSubscription});
 });
 
