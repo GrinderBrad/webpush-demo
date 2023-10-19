@@ -45,8 +45,9 @@ webPush.setVapidDetails(
 app.post("/subscribe", async (req, res) => {
   const {subscription, registrantId} = req.body;
   console.log({subscription, registrantId})
-  const foundSubscription = await Subscriptions.findOne({registrantId})
+  const foundSubscription = await Subscriptions.findOne({where: {registrantId}})
   if (foundSubscription) {
+    console.log('found')
     foundSubscription.subscription = subscription
     await foundSubscription.save()
     return res.status(201).json({});
@@ -67,6 +68,8 @@ app.get("/stream-token", async (req, res) => {
   const client = stream.connect(api_key, api_secret, "1268153", {
     location: "us-east",
   });
+  const user1Feed = client.feed('flat', `AlexBuzlov`);
+  user1Feed.follow('flat', 'AlexBuzlov1');
   let userToken = await client.createUserToken(`${firstName}${lastName}`);
   res.status(200).json({ token: userToken });
 });
@@ -144,6 +147,6 @@ app.post("/send-notification", async (req, res) => {
 });
 
 app.listen(port, async () => {
-  await sequelize.sync(); 
+  await sequelize.sync({}); 
   console.log(`Server started on http://localhost:${port}`);
 });
