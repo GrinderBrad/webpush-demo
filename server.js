@@ -52,7 +52,7 @@ app.post("/subscribe", async (req, res) => {
     await foundSubscription.save()
     return res.status(201).json({});
   }
-  const newSubscription = await Subscriptions.create({ registrantId, subscription });
+  const newSubscription = await Subscriptions.create({ registrantId, subscription: JSON.parse(subscription) });
   res.status(201).json({newSubscription});
 });
 
@@ -122,7 +122,7 @@ app.post("/send-notification", async (req, res) => {
       console.log({subscriptionEntity})
       try {
         await webPush.sendNotification(
-          subscriptionEntity?.subscription,
+          JSON.parse(subscriptionEntity?.subscription),
           JSON.stringify(notificationPayload)
         );
         sent.push(subscriptionEntity.registrantId)
