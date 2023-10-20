@@ -58,10 +58,28 @@ app.post("/subscribe", async (req, res) => {
   res.status(201).json({newSubscription});
 });
 
+app.delete('/weavy/delete-post/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    // /api/posts/
+    const feedResponse = await axios.delete(`https://7105b529b57741a79e09c5836f713b38.weavy.io/api/posts/${id}`, {
+      headers: {
+        'Authorization': 'Bearer wys_6PfllB2UoPk4f5NmfdQZKG6VMEgR4L3pnGPx'
+      }
+    })
+
+    return res.status(200).json({deleted: id})
+  } catch (error) {
+    console.log(error.message)
+    return res.status(400).json({ message: error.message || error });
+  }
+})
+
 app.get("/weavy-token", async (req, res) => {
   let firstName = req.query.firstName;
   let lastName = req.query.lastName;
 
+  // curl -X DELETE https://7105b529b57741a79e09c5836f713b38.weavy.io/api/posts/29 -H "Authorization: Bearer wys_6PfllB2UoPk4f5NmfdQZKG6VMEgR4L3pnGPx"
   // curl -X PUT https://7105b529b57741a79e09c5836f713b38.weavy.io/api/users/feedsdemouser -H "Authorization: Bearer wys_6PfllB2UoPk4f5NmfdQZKG6VMEgR4L3pnGPx" -H "Content-Type: application/json" -d "{ name: 'Demo User' }"
   // curl -X POST https://7105b529b57741a79e09c5836f713b38.weavy.io/api/apps/init -H "Authorization: Bearer wys_6PfllB2UoPk4f5NmfdQZKG6VMEgR4L3pnGPx" -H "Content-Type: application/json" -d "{ app: { uid: 'demofeeds', name: 'Demo feeds', type: 'posts' }, user: { uid: 'feedsdemouser' } }"
   // curl -X POST https://7105b529b57741a79e09c5836f713b38.weavy.io/api/users/feedsdemouser/tokens -H "Authorization: Bearer wys_6PfllB2UoPk4f5NmfdQZKG6VMEgR4L3pnGPx" -H "Content-Type: application/json"
